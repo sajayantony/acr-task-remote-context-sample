@@ -1,6 +1,12 @@
-# acr-task-remote-context-sample
+# ACR Task from a Remote context
 
-Create a build or run a task from a remote context. 
+ACR Tasks can be created or run from a remote context. 
+The context can be a zipped tar archive. 
+The task runtime downloads the context and will execute the task file or the build.
+
+```bash
+az acr run -f mytask.yaml https://example.com/context.tar.gz
+```
 
 ## Creating and uploading the context
 
@@ -20,6 +26,8 @@ az storage blob upload -c context -f $CONTENT_FILE -n $CONTENT_FILE --connection
 ```
 
 ### Generate SAS URL from the context
+
+The below helper script is to generate a SAS URL for for the uploaded context. We will use this to run the [task](acr-task.yaml) remotely. 
 
 ```bash
 STORAGE_ACCOUNT=
