@@ -10,10 +10,17 @@ az acr run -f mytask.yaml https://example.com/context.tar.gz
 
 ## Creating and uploading the context
 
-1. The script below will tar and upload the repo to an azure storage blob.
-1. The task will be executed and will reference the blob using a SAS URL.
+1. Create a tar and upload the repo to an azure blob
+1. Generate a SAS URL for the blob
+1. Schedule a run with the SAS URL as the remote context
 
 ### Upload the context
+
+The script below uploads the current folder as a tar.gz. 
+
+1. Tar the contents of this directory
+1. Create a Azure storage container and obtain the connections string for a storage account
+1. Uploads the blob
 
 ```bash
 STORAGE_ACCOUNT=
@@ -27,7 +34,7 @@ az storage blob upload -c context -f $CONTENT_FILE -n $CONTENT_FILE --connection
 
 ### Generate SAS URL from the context
 
-The below helper script is to generate a SAS URL for for the uploaded context. We will use this to run the [task](acr-task.yaml) remotely. 
+The below helper script is to generate a SAS URL for for the uploaded context. The SAS URL has an expiration of 1 day. This SAS URL is used to run the [task](acr-task.yaml) on the configured Azure Container Registry.
 
 ```bash
 STORAGE_ACCOUNT=
@@ -42,6 +49,8 @@ SAS_URL="$URL$SAS_TOKEN"
 ```
 
 ### RUN ACR Task from a remote context
+
+> Ensure you have run `az configure --defaults acr=<REGISTRY>`
 
 ```bash
 az acr run -f acr-task.yaml "$SAS_URL"
