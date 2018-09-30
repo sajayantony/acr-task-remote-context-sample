@@ -1,0 +1,4 @@
+steps:
+  - build: -t {{.Run.Registry}}/remote-context-sample:{{.Run.ID}} -f Dockerfile .
+  - push: 
+    - {{.Run.Registry}}/remote-context-sample:{{.Run.ID}} 
